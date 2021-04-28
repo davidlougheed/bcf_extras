@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+import os
 import subprocess
 import tempfile
 
@@ -46,6 +47,7 @@ def add_header_lines(
         end: Optional[int] = None,
         tmp_dir: Optional[str] = None,
         delete_old: bool = True):
+
     if start is None and end is None:
         end = 0
 
@@ -56,6 +58,7 @@ def add_header_lines(
         line.strip()
         for line in subprocess.check_output(["bcftools", "view", "-h", vcf]).split(b"\n")
         if not line.startswith(b"##bcftools")  # get rid of extra bcftools junk
+        if line.strip()
     ]
     incl_length = len(header) - 2  # Exclude first and last lines (fileformat/CHROM etc respectively)
 
@@ -96,16 +99,17 @@ def add_header_lines(
     tmp_dir = tmp_dir or "/tmp"
     with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmpfile:
         tmpfile.write(b"\n".join(header) + b"\n")
+        tmpfile.flush()
 
         # Re-header the VCF file
         new_fn = f"{vcf}.new"
         old_fn = f"{vcf}.old"
         subprocess.check_call(["bcftools", "reheader", "-h", tmpfile.name, "-o", new_fn, vcf])
-        subprocess.check_call(["mv", vcf, old_fn])
-        subprocess.check_call(["mv", new_fn, vcf])
+        os.rename(vcf, old_fn)
+        os.rename(new_fn, vcf)
 
         if delete_old:
-            subprocess.check_call(["rm", old_fn])
+            os.remove(old_fn)
 
 
 ACTION_COPY_COMPRESS_INDEX = "copy-compress-index"
