@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # bcf_extras is a set of variant file helper utilities built on top of bcftools and htslib.
 # Copyright (C) 2021  David Lougheed
@@ -52,11 +52,15 @@ def add_header_lines(
     if start is not None and end is not None:
         raise BCFExtrasInputError("add_header_lines: Cannot set both start and end offsets")
 
-    header = [line.strip() for line in subprocess.check_output(["bcftools", "view", "-h", vcf]).split(b"\n")]
+    header = [
+        line.strip()
+        for line in subprocess.check_output(["bcftools", "view", "-h", vcf]).split(b"\n")
+        if not line.startswith(b"##bcftools")  # get rid of extra bcftools junk
+    ]
     incl_length = len(header) - 2  # Exclude first and last lines (fileformat/CHROM etc respectively)
 
     with open(lines, "rb") as lf:
-        new_lines = [line.strip() for line in lf.readlines()]
+        new_lines = [line.strip() for line in lf.readlines() if line.strip()]
 
     # ##fileformat
     # 0
@@ -147,7 +151,6 @@ def main():
              "right before #CHROM.)")
     ahl_parser.add_argument(
         "--keep-old",
-        type=bool,
         action="store_true",
         help="Whether to keep the original file (as {filename}.old) post-header-change. Off by default.")
 
