@@ -23,7 +23,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install apt dependencies
-        run: sudo apt-get install -y bcftools zlib1g-dev libbz2-dev liblzma-dev
+        run: |
+          sudo apt-get install -y bcftools zlib1g-dev libbz2-dev liblzma-dev libcurl-dev libcurl4-gnutls-dev libssl-dev
 
       - name: Build htslib
         run: |
