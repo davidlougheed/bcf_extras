@@ -24,7 +24,11 @@ operating system.
 Creates a `.vcf.gz` with a corresponding tabix index from a VCF, sorting the 
 VCF if necessary.
 
-TODO: Usage
+For example, the following would generate `sample-1.vcf.gz` and `sample-1.vcf.gz.tbi`:
+
+```bash
+bcf-extras copy-compress-index sample-1.vcf
+```
 
 ### `add-header-lines`
 
@@ -32,4 +36,15 @@ Adds header lines from a text file to a particular position in the VCF header.
 Useful for e.g. inserting missing `##contig` lines to a bunch of VCFs at once
 (taking advantage of this + something like GNU parallel.)
 
-TODO: Usage
+For the `##contig` lines example, inserting the contents of 
+[`tests/vcfs/new_lines.txt`](tests/vcfs/new_lines.txt), we could run the 
+following command on [`tests/vcfs/ahl.vcf`](tests/vcfs/ahl.vcf, replacing the 
+file with a new copy:
+
+```bash
+bcf-extras add-header-lines tests/vcfs/ahl.vcf tests/vcfs/new_lines.txt --delete-existing
+```
+
+There is also a flag, `--tmp-dir`, for specifying a temporary folder location
+into which header artifacts will be placed. This is especially useful when 
+running jobs on clusters, which may have specific locations for temporary I/O.
