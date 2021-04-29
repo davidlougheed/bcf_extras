@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from bcf_extras.entry import add_header_lines, BCFExtrasInputError
+from bcf_extras.entry import BCFExtrasInputError, add_header_lines, main
 
 
 f = os.path.join(os.path.dirname(__file__), "vcfs", "ahl.vcf")
@@ -63,3 +63,19 @@ def test_add_header_lines_raises_2():
 
     with pytest.raises(BCFExtrasInputError):
         add_header_lines(vcf=f, lines=lf, delete_old=False, end=4)
+
+
+def test_cli_1():
+    main(["add-header-lines", f, lf, "--start", "0", "--keep-old"])
+
+    try:
+        with open(f, "r") as nf, open(t1, "r") as tf:
+            assert nf.read() == tf.read()
+    finally:  # Reset everything
+        os.remove(f)
+        os.rename(f_old, f)
+
+
+def test_cli_raises():
+    with pytest.raises(SystemExit):
+        main(["add-header-lines", f, "--start", "0", "--keep-old"])
