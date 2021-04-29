@@ -17,4 +17,17 @@ operating system.
 
 ## What's Included
 
-### TODO
+### `copy-compress-index`
+
+Creates a `.vcf.gz` with a corresponding tabix index from a VCF, sorting the 
+VCF if necessary.
+
+TODO: Usage
+
+### `add-header-lines`
+
+Adds header lines from a text file to a particular position in the VCF header.
+Useful for e.g. inserting missing `##contig` lines to a bunch of VCFs at once
+(taking advantage of this + something like GNU parallel.)
+
+TODO: Usage
