@@ -136,7 +136,7 @@ ACTION_COPY_COMPRESS_INDEX = "copy-compress-index"
 ACTION_ADD_HEADER_LINES = "add-header-lines"
 
 
-def main(args: List[str]):
+def main(args: Optional[List[str]] = None):
     parser = argparse.ArgumentParser(
         description="A set of variant file helper utilities built on top of bcftools and htslib.")
     subparsers = parser.add_subparsers(
@@ -179,7 +179,7 @@ def main(args: List[str]):
         help="Whether to delete the original file instead of keeping it (as {filename}.old) post-header-change. "
              "Off by default.")
 
-    p_args = parser.parse_args(args)
+    p_args = parser.parse_args(args or sys.argv[1:])
 
     # TODO: py3.10: match
     if p_args.action == ACTION_COPY_COMPRESS_INDEX:
