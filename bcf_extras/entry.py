@@ -34,7 +34,7 @@ class BCFExtrasInputError(Exception):
     pass
 
 
-def copy_compress_index(vcf):
+def copy_compress_index(vcf: str):
     vcf_gz = f"{vcf}.gz"
     subprocess.check_call(["bcftools", "sort", "-o", vcf_gz, "-O" "z", vcf])
     subprocess.check_call(["tabix", "-f", "-p", "vcf", vcf_gz])
@@ -42,11 +42,20 @@ def copy_compress_index(vcf):
 
 def add_header_lines(
         vcf: str,
-        lines,
+        lines: str,
         start: Optional[int] = None,
         end: Optional[int] = None,
         tmp_dir: Optional[str] = None,
         delete_old: bool = True):
+    """
+    Utility to insert header lines from a text file into a VCF.
+    :param vcf: The VCF to add header lines to.
+    :param lines: The text file containing the lines in question.
+    :param start: 0-indexed offset from the start of the header, excluding fileformat line.
+    :param end: 0-indexed offset from the start of the header, excluding #CHROM line.
+    :param tmp_dir: Optionally, a directory to put header file fragments during processing.
+    :param delete_old: Whether to delete the original VCF or keep it with a .old file extension.
+    """
 
     if start is None and end is None:
         end = 0
@@ -70,8 +79,11 @@ def add_header_lines(
     # ## other
     # 1
     # #CHROM ...
-    if start is not None and start > incl_length:
-        raise BCFExtrasInputError(f"add_header_lines: Start offset is past last header ({start} > {incl_length})")
+    if start is not None:
+        if start < 0:
+            raise BCFExtrasInputError(f"add_header_lines: Start offset cannot be negative")
+        elif start > incl_length:
+            raise BCFExtrasInputError(f"add_header_lines: Start offset is past last header ({start} > {incl_length})")
 
     # Reverso!
     # #CHROM
@@ -79,10 +91,12 @@ def add_header_lines(
     # ## other
     # 1
     # ##fileformat
-    if end is not None and end > incl_length:
-        raise BCFExtrasInputError(f"add_header_lines: End offset is past first header ({end} > {incl_length})")
-
     if end is not None:
+        if end < 0:
+            raise BCFExtrasInputError(f"add_header_lines: End offset cannot be negative")
+        elif end > incl_length:
+            raise BCFExtrasInputError(f"add_header_lines: End offset is past first header ({end} > {incl_length})")
+
         # Reverse lines to have consistent indexing strategy
         header.reverse()
         new_lines.reverse()
@@ -151,7 +165,7 @@ def main():
         "--end",
         type=int,
         default=None,
-        help="0-indexed offset from the start of the header, excluding fileformat line (e.g. --end 0 will insert "
+        help="0-indexed offset from the start of the header, excluding #CHROM line (e.g. --end 0 will insert "
              "right before #CHROM.)")
     ahl_parser.add_argument(
         "--keep-old",

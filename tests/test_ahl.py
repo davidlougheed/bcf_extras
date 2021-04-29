@@ -1,6 +1,8 @@
 import os
 
-from bcf_extras.entry import add_header_lines
+import pytest
+
+from bcf_extras.entry import add_header_lines, BCFExtrasInputError
 
 
 f = os.path.join(os.path.dirname(__file__), "vcfs", "ahl.vcf")
@@ -12,27 +14,52 @@ t2 = os.path.join(os.path.dirname(__file__), "vcfs", "ahl_target_2.vcf")
 t3 = os.path.join(os.path.dirname(__file__), "vcfs", "ahl_target_3.vcf")
 
 
-def test_add_header_lines_1_a():
-    add_header_lines(vcf=f, lines=lf, start=0, delete_old=False)
+def _test_add_header_lines(target, **kwargs):
+    add_header_lines(vcf=f, lines=lf, delete_old=False, **kwargs)
 
     try:
-        with open(f, "r") as nf, open(t1, "r") as tf:
+        with open(f, "r") as nf, open(target, "r") as tf:
             assert nf.read() == tf.read()
     finally:  # Reset everything
         os.remove(f)
         os.rename(f_old, f)
+
+
+def test_add_header_lines_1_a():
+    _test_add_header_lines(t1, start=0)
 
 
 def test_add_header_lines_1_b():
-    add_header_lines(vcf=f, lines=lf, end=3, delete_old=False)
-
-    try:
-        with open(f, "r") as nf, open(t1, "r") as tf:
-            assert nf.read() == tf.read()
-    finally:  # Reset everything
-        os.remove(f)
-        os.rename(f_old, f)
+    _test_add_header_lines(t1, end=3)
 
 
-# TODO: Insertion in middle
-# TODO: Error raising
+def test_add_header_lines_2_a():
+    _test_add_header_lines(t2, start=3)
+
+
+def test_add_header_lines_2_b():
+    _test_add_header_lines(t2, end=0)
+
+
+def test_add_header_lines_3_a():
+    _test_add_header_lines(t3, start=1)
+
+
+def test_add_header_lines_3_b():
+    _test_add_header_lines(t3, end=2)
+
+
+def test_add_header_lines_raises_1():
+    with pytest.raises(BCFExtrasInputError):
+        add_header_lines(vcf=f, lines=lf, delete_old=False, start=-1)
+
+    with pytest.raises(BCFExtrasInputError):
+        add_header_lines(vcf=f, lines=lf, delete_old=False, start=4)
+
+
+def test_add_header_lines_raises_2():
+    with pytest.raises(BCFExtrasInputError):
+        add_header_lines(vcf=f, lines=lf, delete_old=False, end=-1)
+
+    with pytest.raises(BCFExtrasInputError):
+        add_header_lines(vcf=f, lines=lf, delete_old=False, end=4)
