@@ -50,3 +50,6 @@ jobs:
 
       - name: Run tests
         run: PATH="${PATH}:$(pwd)/htslib-1.10" python -m pytest
+
+      - name: Check command-line entrypoint
+        run: PATH="${PATH}:$(pwd)/htslib-1.10" bcf-extras -h
