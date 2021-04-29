@@ -52,7 +52,7 @@ def add_header_lines(
         start: Optional[int] = None,
         end: Optional[int] = None,
         tmp_dir: Optional[str] = None,
-        delete_old: bool = True):
+        delete_old: bool = False):
     """
     Utility to insert header lines from a text file into a VCF.
     :param vcf: The VCF to add header lines to.
@@ -174,9 +174,10 @@ def main(args: List[str]):
         help="0-indexed offset from the start of the header, excluding #CHROM line (e.g. --end 0 will insert "
              "right before #CHROM.)")
     ahl_parser.add_argument(
-        "--keep-old",
+        "--delete-old",
         action="store_true",
-        help="Whether to keep the original file (as {filename}.old) post-header-change. Off by default.")
+        help="Whether to delete the original file instead of keeping it (as {filename}.old) post-header-change. "
+             "Off by default.")
 
     p_args = parser.parse_args(args)
 
@@ -184,7 +185,7 @@ def main(args: List[str]):
     if p_args.action == ACTION_COPY_COMPRESS_INDEX:
         copy_compress_index(p_args.vcf)
     elif p_args.action == ACTION_ADD_HEADER_LINES:
-        add_header_lines(p_args.vcf, p_args.lines, p_args.start, p_args.end, delete_old=not p_args.keep_old)
+        add_header_lines(p_args.vcf, p_args.lines, p_args.start, p_args.end, p_args.delete_old)
 
 
 if __name__ == "__main__":

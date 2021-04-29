@@ -66,7 +66,7 @@ def test_add_header_lines_raises_2():
 
 
 def test_cli_1():
-    main(["add-header-lines", f, lf, "--start", "0", "--keep-old"])
+    main(["add-header-lines", f, lf, "--start", "0"])
 
     try:
         with open(f, "r") as nf, open(t1, "r") as tf:
@@ -78,4 +78,4 @@ def test_cli_1():
 
 def test_cli_raises():
     with pytest.raises(SystemExit):
-        main(["add-header-lines", f, "--start", "0", "--keep-old"])
+        main(["add-header-lines", f, "--start", "0"])
