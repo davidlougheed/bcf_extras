@@ -19,14 +19,20 @@
 import argparse
 import os
 import subprocess
+import sys
 import tempfile
 
-from typing import Optional
+from typing import List, Optional
 
 __all__ = [
     "BCFExtrasInputError",
+
+    "ACTION_COPY_COMPRESS_INDEX",
+    "ACTION_ADD_HEADER_LINES",
+
     "copy_compress_index",
     "add_header_lines",
+    "main",
 ]
 
 
@@ -130,7 +136,7 @@ ACTION_COPY_COMPRESS_INDEX = "copy-compress-index"
 ACTION_ADD_HEADER_LINES = "add-header-lines"
 
 
-def main():
+def main(args: List[str]):
     parser = argparse.ArgumentParser(
         description="A set of variant file helper utilities built on top of bcftools and htslib.")
     subparsers = parser.add_subparsers(
@@ -172,14 +178,14 @@ def main():
         action="store_true",
         help="Whether to keep the original file (as {filename}.old) post-header-change. Off by default.")
 
-    args = parser.parse_args()
+    p_args = parser.parse_args(args)
 
     # TODO: py3.10: match
-    if args.action == ACTION_COPY_COMPRESS_INDEX:
-        copy_compress_index(args.vcf)
-    elif args.action == ACTION_ADD_HEADER_LINES:
-        add_header_lines(args.vcf, args.lines, args.start, args.end, delete_old=not args.keep_old)
+    if p_args.action == ACTION_COPY_COMPRESS_INDEX:
+        copy_compress_index(p_args.vcf)
+    elif p_args.action == ACTION_ADD_HEADER_LINES:
+        add_header_lines(p_args.vcf, p_args.lines, p_args.start, p_args.end, delete_old=not p_args.keep_old)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
