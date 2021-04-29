@@ -1,6 +1,6 @@
 # bcf_extras
 
-![Test Status](https://github.com/davidlougheed/bcf_extras/workflows/Test/badge.svg)
+![Test Status](https://github.com/davidlougheed/bcf_extras/workflows/Tests/badge.svg)
 
 Extra variant file helper utilities built on top of `bcftools` and `htslib`.
 

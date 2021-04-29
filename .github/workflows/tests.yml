@@ -1,4 +1,4 @@
-name: Test
+name: Tests
 
 on:
   push:
@@ -48,5 +48,5 @@ jobs:
       - name: Package installation
         run: pip install .
 
-      - name: Run tests (Windows)
+      - name: Run tests
         run: PATH="${PATH}:$(pwd)/htslib-1.10" python -m pytest
