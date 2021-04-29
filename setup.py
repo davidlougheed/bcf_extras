@@ -9,7 +9,7 @@ setup(
     name="bcf_extras",
     version="0.1.0",
 
-    python_requires="~=3.6",
+    python_requires="~=3.7",
 
     description="A set of variant file helper utilities built on top of bcftools and htslib.",
     long_description=long_description,
