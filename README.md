@@ -48,3 +48,9 @@ bcf-extras add-header-lines tests/vcfs/ahl.vcf tests/vcfs/new_lines.txt --delete
 There is also a flag, `--tmp-dir`, for specifying a temporary folder location
 into which header artifacts will be placed. This is especially useful when 
 running jobs on clusters, which may have specific locations for temporary I/O.
+
+Using GNU parallel, we can do multiple VCFs at once, e.g.:
+
+```bash
+parallel 'bcf-extras add-header-lines {} tests/vcfs/new_lines.txt --delete-existing' ::: /path/to/my/vcfs/*.vcf
+```
