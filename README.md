@@ -38,7 +38,7 @@ Useful for e.g. inserting missing `##contig` lines to a bunch of VCFs at once
 
 For the `##contig` lines example, inserting the contents of 
 [`tests/vcfs/new_lines.txt`](tests/vcfs/new_lines.txt), we could run the 
-following command on [`tests/vcfs/ahl.vcf`](tests/vcfs/ahl.vcf, replacing the 
+following command on [`tests/vcfs/ahl.vcf`](tests/vcfs/ahl.vcf), replacing the 
 file with a new copy:
 
 ```bash
