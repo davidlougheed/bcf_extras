@@ -1,5 +1,11 @@
 env/
+
 .pytest_cache/
 __pycache__
+
 tests/vcfs/cci.vcf.gz
 tests/vcfs/cci.vcf.gz.tbi
+
+bcf_extras.egg-info/
+build/
+dist/
