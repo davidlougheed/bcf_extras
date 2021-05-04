@@ -1,6 +1,6 @@
 import os
 
-from bcf_extras.entry import copy_compress_index
+from bcf_extras.copy_compress_index import copy_compress_index
 
 
 def test_cci():

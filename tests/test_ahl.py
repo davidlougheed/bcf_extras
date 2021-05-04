@@ -2,7 +2,9 @@ import os
 
 import pytest
 
-from bcf_extras.entry import BCFExtrasInputError, add_header_lines, main
+from bcf_extras.add_header_lines import add_header_lines
+from bcf_extras.entry import main
+from bcf_extras.exceptions import BCFExtrasInputError
 
 
 f = os.path.join(os.path.dirname(__file__), "vcfs", "ahl.vcf")
