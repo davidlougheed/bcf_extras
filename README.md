@@ -21,8 +21,8 @@ operating system.
 
 ### `copy-compress-index`
 
-Creates a `.vcf.gz` with a corresponding tabix index from a VCF, sorting the 
-VCF if necessary.
+Creates `.vcf.gz` files with a corresponding tabix indices from one or more 
+VCFs, sorting the VCFs if necessary.
 
 For example, the following would generate `sample-1.vcf.gz` and `sample-1.vcf.gz.tbi`:
 

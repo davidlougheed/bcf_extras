@@ -40,10 +40,11 @@ class BCFExtrasInputError(Exception):
     pass
 
 
-def copy_compress_index(vcf: str):
-    vcf_gz = f"{vcf}.gz"
-    subprocess.check_call(["bcftools", "sort", "-o", vcf_gz, "-O" "z", vcf])
-    subprocess.check_call(["tabix", "-f", "-p", "vcf", vcf_gz])
+def copy_compress_index(vcfs: List[str]):
+    for vcf in vcfs:  # TODO: Parallelize if specified
+        vcf_gz = f"{vcf}.gz"
+        subprocess.check_call(["bcftools", "sort", "-o", vcf_gz, "-O" "z", vcf])
+        subprocess.check_call(["tabix", "-f", "-p", "vcf", vcf_gz])
 
 
 def add_header_lines(
@@ -148,7 +149,7 @@ def main(args: Optional[List[str]] = None):
     cci_parser = subparsers.add_parser(
         ACTION_COPY_COMPRESS_INDEX,
         help="Compresses a VCF to a bgzipped copy with a tabix index, leaving the original intact.")
-    cci_parser.add_argument("vcf", type=str, help="The VCF to process.")
+    cci_parser.add_argument("vcfs", nargs="+", type=str, help="The VCF(s) to process.")
 
     ahl_parser = subparsers.add_parser(
         ACTION_ADD_HEADER_LINES,
@@ -183,7 +184,7 @@ def main(args: Optional[List[str]] = None):
 
     # TODO: py3.10: match
     if p_args.action == ACTION_COPY_COMPRESS_INDEX:
-        copy_compress_index(p_args.vcf)
+        copy_compress_index(p_args.vcfs)
     elif p_args.action == ACTION_ADD_HEADER_LINES:
         add_header_lines(p_args.vcf, p_args.lines, p_args.start, p_args.end, p_args.delete_old)
 
