@@ -54,3 +54,25 @@ Using GNU parallel, we can do multiple VCFs at once, e.g.:
 ```bash
 parallel 'bcf-extras add-header-lines {} tests/vcfs/new_lines.txt --delete-existing' ::: /path/to/my/vcfs/*.vcf
 ```
+
+### `arg-join`
+
+Some bioinformatics utilities take in comma-separated file lists rather than 
+the more standard whitespace-separated lists that something like a glob 
+(`*.vcf.gz`) generates.
+
+This command can be run by itself, e.g.:
+
+```bash
+bcf-extras arg-join --sep ";" *.vcf
+# Outputs e.g. sample1.vcf;sample2.vcf
+```
+
+It can be used embedded in another command, e.g. with `mergeSTR`,
+[a tool for merging STR caller VCFs](https://github.com/gymreklab/TRTools):
+
+```bash
+mergeSTR --vcfs $(bcf-extras arg-join *.vcf) --out my_merge
+```
+
+The default separator (sepcified via `--sep`) is `,`.

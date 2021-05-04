@@ -29,8 +29,9 @@ __all__ = [
 ]
 
 
-ACTION_COPY_COMPRESS_INDEX = "copy-compress-index"
 ACTION_ADD_HEADER_LINES = "add-header-lines"
+ACTION_ARG_JOIN = "arg-join"
+ACTION_COPY_COMPRESS_INDEX = "copy-compress-index"
 
 
 def main(args: Optional[List[str]] = None):
@@ -76,6 +77,12 @@ def main(args: Optional[List[str]] = None):
         help="Whether to delete the original file instead of keeping it (as {filename}.old) post-header-change. "
              "Off by default.")
 
+    aj_parser = subparsers.add_parser(
+        ACTION_ARG_JOIN,
+        help="Joins arguments by a specified string, for pipelining into other utilities.")
+    aj_parser.add_argument("--sep", type=str, default=",", help="The string to join arguments by.")
+    aj_parser.add_argument("args", nargs="*", help="Arguments to join together.")
+
     p_args = parser.parse_args(args or sys.argv[1:])
 
     # TODO: py3.10: match
@@ -83,6 +90,8 @@ def main(args: Optional[List[str]] = None):
         copy_compress_index(p_args.vcfs)
     elif p_args.action == ACTION_ADD_HEADER_LINES:
         add_header_lines(p_args.vcf, p_args.lines, p_args.start, p_args.end, p_args.delete_old)
+    elif p_args.action == ACTION_ARG_JOIN:
+        print(p_args.sep.join(p_args.args), end="")
 
 
 if __name__ == "__main__":
