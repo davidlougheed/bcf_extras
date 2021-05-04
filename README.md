@@ -76,4 +76,4 @@ which takes as input a *comma-separated* list of files:
 mergeSTR --vcfs $(bcf-extras arg-join *.vcf) --out my_merge
 ```
 
-The default separator (sepcified via `--sep`) is `,`.
+The default separator (specified via `--sep`) is `,`.
