@@ -69,7 +69,8 @@ bcf-extras arg-join --sep ";" *.vcf
 ```
 
 It can be used embedded in another command, e.g. with `mergeSTR`,
-[a tool for merging STR caller VCFs](https://github.com/gymreklab/TRTools):
+[a tool for merging STR caller VCFs](https://github.com/gymreklab/TRTools)
+which takes as input a *comma-separated* list of files:
 
 ```bash
 mergeSTR --vcfs $(bcf-extras arg-join *.vcf) --out my_merge
