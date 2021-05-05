@@ -34,6 +34,8 @@ def _merge(
 ):
     out_file = f"{prefix}_{level}_{idx}" if level is not None and idx is not None else prefix
 
+    print(f"\tMerging [{', '.join(vcfs)}] to {out_file}")
+
     mergestr_main(Namespace(
         out=out_file,
         vcfs=",".join(vcfs),
