@@ -3,6 +3,7 @@ import multiprocessing
 import os
 
 from argparse import Namespace
+from datetime import datetime
 from typing import List, Optional
 
 from .exceptions import BCFExtrasDependencyError
@@ -61,6 +62,11 @@ def parallel_mergestr(
     initial_merges = _merge_small_last(
         [vcfs[i:i+group_size] for i in range(0, len(vcfs), group_size)], group_size)
 
+    start_time = datetime.utcnow()
+
+    print(f"Running parallel-mergeSTR with {ntasks} processes (group size: {group_size})")
+    print(f"\tStarted at {start_time}Z")
+
     # TODO: This could be slightly more efficient if it allowed the second level to process at the same time... oh well
 
     with multiprocessing.Pool(ntasks) as p:
@@ -74,3 +80,7 @@ def parallel_mergestr(
 
     # We've now merged every group_size VCFs into intermediate files - time to merge those!
     _merge(out, None, init_outputs, vcf_type, None, True)
+
+    end_time = datetime.utcnow()
+
+    print(f"\tFinished at {end_time}Z (took {end_time - start_time})")
