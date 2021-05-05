@@ -78,8 +78,12 @@ def parallel_mergestr(
 
         # TODO: Index/compress these?
 
-    # We've now merged every group_size VCFs into intermediate files - time to merge those!
-    _merge(out, None, init_outputs, vcf_type, None, True)
+    if len(init_outputs) == 1:
+        # Don't merge a single file, rename instead
+        os.rename(init_outputs[0], f"{out}.vcf")
+    else:
+        # We've now merged every group_size VCFs into intermediate files - time to merge those!
+        _merge(out, None, init_outputs, vcf_type, None, True)
 
     end_time = datetime.utcnow()
 
