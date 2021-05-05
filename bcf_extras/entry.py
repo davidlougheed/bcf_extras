@@ -23,6 +23,7 @@ from typing import List, Optional
 
 from .add_header_lines import add_header_lines
 from .copy_compress_index import copy_compress_index
+from .parallel_mergestr import parallel_mergestr
 
 __all__ = [
     "main",
@@ -32,6 +33,7 @@ __all__ = [
 ACTION_ADD_HEADER_LINES = "add-header-lines"
 ACTION_ARG_JOIN = "arg-join"
 ACTION_COPY_COMPRESS_INDEX = "copy-compress-index"
+ACTION_PARALLEL_MERGESTR = "parallel-mergeSTR"
 
 
 def main(args: Optional[List[str]] = None):
@@ -83,6 +85,18 @@ def main(args: Optional[List[str]] = None):
     aj_parser.add_argument("--sep", type=str, default=",", help="The string to join arguments by.")
     aj_parser.add_argument("args", nargs="*", help="Arguments to join together.")
 
+    pms_parser = subparsers.add_parser(
+        ACTION_PARALLEL_MERGESTR,
+        help="Runs the TRTools mergeSTR command in parallel, with a specified number of processes.")
+    pms_parser.add_argument("--out", type=str, required=True, help="Output VCF name for final merge result.")
+    pms_parser.add_argument(
+        "--vcftype",
+        type=str,
+        default="auto",
+        help="The type of VCFs being processed (see mergeSTR docs for more info.)")
+    pms_parser.add_argument("--ntasks", type=int, default=2, help="The number of processes to use.")
+    pms_parser.add_argument("vcfs", nargs="+", type=str, help="The VCF(s) to merge.")
+
     p_args = parser.parse_args(args or sys.argv[1:])
 
     # TODO: py3.10: match
@@ -92,6 +106,8 @@ def main(args: Optional[List[str]] = None):
         add_header_lines(p_args.vcf, p_args.lines, p_args.start, p_args.end, p_args.delete_old)
     elif p_args.action == ACTION_ARG_JOIN:
         print(p_args.sep.join(p_args.args), end="")
+    elif p_args.action == ACTION_PARALLEL_MERGESTR:
+        parallel_mergestr(p_args.vcfs, p_args.out, p_args.vcftype, p_args.ntasks)  # leave intermediate_prefix default
 
 
 if __name__ == "__main__":
