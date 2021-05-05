@@ -16,8 +16,26 @@ information.
 The package requires that `bcftools` and `htslib` are installed on your 
 operating system.
 
+For the `str` extra, `TRtools` is required as a pip dependency. This should be
+handled automatically upon installation, but I have encountered installation 
+issues before (especially when copies of `htslib` interfere with one another.)
+Feel free to file an issue to ask about this.
 
-## What's Included
+
+## Installation
+
+One can use pip to install either the base `bcf-extras` or `bcf-extras[str]`,
+which has additional dependencies and adds some more utilities related to STR
+calling.
+
+```bash
+pip install bcf-extras
+# or
+pip install bcf-extras[str]
+```
+
+
+## What's Included (Base)
 
 ### `copy-compress-index`
 
@@ -77,3 +95,18 @@ mergeSTR --vcfs $(bcf-extras arg-join *.vcf) --out my_merge
 ```
 
 The default separator (specified via `--sep`) is `,`.
+
+
+## What's Included (STR)
+
+### `parallel-mergeSTR`
+
+[mergeSTR](https://github.com/gymreklab/TRTools) is a tool by the Gymrek lab
+used to merge STR call VCFs. It proceeds linearly over a list of files, which
+cannot easily take advantage of multiple cores. This utility merges VCFs in a 
+tree fashion to produce a final merged result, and is handy when merging 100s
+of STR call VCFs at once.
+
+```bash
+bcf-extras parallel-mergeSTR *.vcf --out my_merge --ntasks 40
+```

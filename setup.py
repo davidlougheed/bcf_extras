@@ -10,6 +10,9 @@ setup(
     version="0.2.0-develop",
 
     python_requires="~=3.7",
+    extras_require={
+        "str": ["trtools"],
+    },
 
     description="A set of variant file helper utilities built on top of bcftools and htslib.",
     long_description=long_description,
