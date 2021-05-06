@@ -35,7 +35,7 @@ def _merge(
 ):
     out_file_prefix = f"{prefix}_{level}_{idx}" if level is not None and idx is not None else prefix
 
-    print(f"\tMerging [{', '.join(vcfs)}] to {out_file_prefix}.vcf")
+    print(f"\tMerging [{', '.join(vcfs)}] to {out_file_prefix}.vcf", flush=True)
 
     mergestr_main(Namespace(
         out=out_file_prefix,
