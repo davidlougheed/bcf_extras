@@ -1,6 +1,7 @@
 import math
 import multiprocessing
 import os
+import subprocess
 
 from argparse import Namespace
 from datetime import datetime
@@ -52,6 +53,13 @@ def _merge(
     return f"{out_file_prefix}.vcf"
 
 
+def _compress(vcf: str):
+    subprocess.check_call(["bgzip", vcf])
+    gz = f"{vcf}.gz"
+    subprocess.check_call(["tabix", "-f", "-p", "vcf", gz])
+    return gz
+
+
 def parallel_mergestr(
         vcfs: List[str],
         out: str,
@@ -62,14 +70,14 @@ def parallel_mergestr(
     if mergestr_main is None:
         raise BCFExtrasDependencyError("Could not import trtools.mergeSTR.mergeSTR:main (missing TRTools dependency?)")
 
-    ntasks = min(max(ntasks, 1), 512)  # Keep ntasks between 1 and 512 inclusive
+    ntasks = min(max(ntasks, 2), 512)  # Keep ntasks between 2 and 512 inclusive
     group_size = math.ceil(len(vcfs) / ntasks)
     initial_merges = _merge_small_last(
         [vcfs[i:i+group_size] for i in range(0, len(vcfs), group_size)], group_size)
 
     start_time = datetime.utcnow()
 
-    print(f"Running parallel-mergeSTR with {ntasks} processes (group size: {group_size})")
+    print(f"Running parallel-mergeSTR with {ntasks} processes (group size: {group_size}, output: {out})")
     print(f"\tStarted at {start_time}Z")
 
     # TODO: This could be slightly more efficient if it allowed the second level to process at the same time... oh well
@@ -81,14 +89,15 @@ def parallel_mergestr(
         ]
         init_outputs = [j.get() for j in init_merge_jobs]
 
-        # TODO: Index/compress these?
+        compress_jobs = [p.apply_async(_compress, (vcf,)) for vcf in init_outputs]
+        compress_outputs = [j.get() for j in compress_jobs]
 
     if len(init_outputs) == 1:
         # Don't merge a single file, rename instead
         os.rename(init_outputs[0], f"{out}.vcf")
     else:
         # We've now merged every group_size VCFs into intermediate files - time to merge those!
-        _merge(out, None, init_outputs, vcf_type, None, True)
+        _merge(out, None, compress_outputs, vcf_type, None, True)
 
     end_time = datetime.utcnow()
 
