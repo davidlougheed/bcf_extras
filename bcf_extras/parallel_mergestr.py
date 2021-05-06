@@ -49,6 +49,10 @@ def _merge(
     if remove_previous:
         for vcf in vcfs:
             os.remove(vcf)
+            try:
+                os.remove(f"{vcf}.tbi")
+            except FileNotFoundError:
+                pass
 
     return f"{out_file_prefix}.vcf"
 
