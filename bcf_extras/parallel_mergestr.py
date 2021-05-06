@@ -40,6 +40,9 @@ def _merge(
         out=out_file,
         vcfs=",".join(vcfs),
         vcftype=vcf_type,
+        update_sample_from_file=False,   # TODO: Pass in
+        verbose=False,   # TODO: Pass in
+        quiet=False,   # TODO: Pass in
     ))
 
     if remove_previous:
