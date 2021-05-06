@@ -32,12 +32,12 @@ def _merge(
         level: Optional[int],
         remove_previous: bool
 ):
-    out_file = f"{prefix}_{level}_{idx}" if level is not None and idx is not None else prefix
+    out_file_prefix = f"{prefix}_{level}_{idx}" if level is not None and idx is not None else prefix
 
-    print(f"\tMerging [{', '.join(vcfs)}] to {out_file}")
+    print(f"\tMerging [{', '.join(vcfs)}] to {out_file_prefix}.vcf")
 
     mergestr_main(Namespace(
-        out=out_file,
+        out=out_file_prefix,
         vcfs=",".join(vcfs),
         vcftype=vcf_type,
         update_sample_from_file=False,   # TODO: Pass in
@@ -49,7 +49,7 @@ def _merge(
         for vcf in vcfs:
             os.remove(vcf)
 
-    return out_file
+    return f"{out_file_prefix}.vcf"
 
 
 def parallel_mergestr(
