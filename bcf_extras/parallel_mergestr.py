@@ -86,7 +86,7 @@ def parallel_mergestr(
         intermediate_prefix = f"pmerge_intermediate_{out}"
 
     ntasks = min(max(ntasks, 2), 512)  # Keep ntasks between 2 and 512 inclusive
-    group_size = math.ceil(len(vcfs) / ntasks)
+    group_size = math.floor(len(vcfs) / ntasks)
     initial_merges = _merge_small_last(
         [vcfs[i:i+group_size] for i in range(0, len(vcfs), group_size)], group_size)
 
