@@ -95,6 +95,8 @@ def main(args: Optional[List[str]] = None):
         default="auto",
         help="The type of VCFs being processed (see mergeSTR docs for more info.)")
     pms_parser.add_argument("--ntasks", type=int, default=2, help="The number of processes to use.")
+    pms_parser.add_argument("--step1-only", action="store_true", help="Whether to only run the first step.")
+    pms_parser.add_argument("--step2-only", action="store_true", help="Whether to only run the second step.")
     pms_parser.add_argument("vcfs", nargs="+", type=str, help="The VCF(s) to merge.")
 
     p_args = parser.parse_args(args or sys.argv[1:])
@@ -107,7 +109,15 @@ def main(args: Optional[List[str]] = None):
     elif p_args.action == ACTION_ARG_JOIN:
         print(p_args.sep.join(p_args.args), end="")
     elif p_args.action == ACTION_PARALLEL_MERGESTR:
-        parallel_mergestr(p_args.vcfs, p_args.out, p_args.vcftype, p_args.ntasks)  # leave intermediate_prefix default
+        # leave intermediate_prefix default
+        parallel_mergestr(
+            p_args.vcfs,
+            p_args.out,
+            p_args.vcftype,
+            p_args.ntasks,
+            p_args.step1_only,
+            p_args.step2_only,
+        )
 
 
 if __name__ == "__main__":
