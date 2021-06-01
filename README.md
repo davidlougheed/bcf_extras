@@ -60,7 +60,7 @@ following command on [`tests/vcfs/ahl.vcf`](tests/vcfs/ahl.vcf), replacing the
 file with a new copy:
 
 ```bash
-bcf-extras add-header-lines tests/vcfs/ahl.vcf tests/vcfs/new_lines.txt --delete-existing
+bcf-extras add-header-lines tests/vcfs/ahl.vcf tests/vcfs/new_lines.txt
 ```
 
 There is also a flag, `--tmp-dir`, for specifying a temporary folder location
@@ -70,8 +70,10 @@ running jobs on clusters, which may have specific locations for temporary I/O.
 Using GNU parallel, we can do multiple VCFs at once, e.g.:
 
 ```bash
-parallel 'bcf-extras add-header-lines {} tests/vcfs/new_lines.txt --delete-existing' ::: /path/to/my/vcfs/*.vcf
+parallel 'bcf-extras add-header-lines {} tests/vcfs/new_lines.txt --keep-old' ::: /path/to/my/vcfs/*.vcf
 ```
+
+The `--keep-old` flag keeps the original VCFs as a copy.
 
 ### `arg-join`
 
