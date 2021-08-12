@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="bcf_extras",
-    version="0.2.0-develop",
+    version="0.2.0.dev1",
 
     python_requires="~=3.7",
     extras_require={
