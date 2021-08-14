@@ -13,7 +13,7 @@ def _compile_if_not_none(pattern: Optional[str]) -> Optional[re.Pattern]:
 
 
 def filter_gff3(gff_file: str, seq_id: Optional[str], source: Optional[str], feature_type: Optional[str],
-                strand: Optional[str], phase: Optional[str]):
+                strand: Optional[str], phase: Optional[str], no_body_comments: bool = False):
     # TODO: Add support for reading from bgzip file
     # TODO: Add support for querying scalar values
     # TODO: Add support for attribute querying
@@ -24,11 +24,16 @@ def filter_gff3(gff_file: str, seq_id: Optional[str], source: Optional[str], fea
     strand = _compile_if_not_none(strand)
     phase = _compile_if_not_none(phase)
 
+    done_header = False
+
     with open(gff_file, "r") as gf:
         for line in gf:
             if not line.strip() or line[0] == "#":
-                sys.stdout.write(line)
+                if not (done_header and no_body_comments):
+                    sys.stdout.write(line)
                 continue
+
+            done_header = True
 
             l_split = line.strip().split("\t")
 

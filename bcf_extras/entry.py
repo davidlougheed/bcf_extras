@@ -109,6 +109,8 @@ def _add_fg3_parser(subparsers):
     fg3_parser.add_argument("--type", type=str, help="type filter")
     fg3_parser.add_argument("--strand", type=str, help="strand filter")
     fg3_parser.add_argument("--phase", type=str, help="phase filter")
+    fg3_parser.add_argument("--no-body-comments", action="store_true",
+                            help="Whether to remove comments that are interspersed with records.")
     fg3_parser.add_argument("file", type=str, help="GFF3 file path to process.")
 
 
@@ -154,6 +156,7 @@ def main(args: Optional[List[str]] = None):
             getattr(p_args, "type", None),
             getattr(p_args, "strand", None),
             getattr(p_args, "phase", None),
+            no_body_comments=p_args.no_body_comments,
         )
 
 
