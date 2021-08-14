@@ -30,7 +30,7 @@ def filter_gff3(gff_file: str, seq_id: Optional[str], source: Optional[str], fea
                 sys.stdout.write(line)
                 continue
 
-            l_split = line.split("\t")
+            l_split = line.strip().split("\t")
 
             res = True
 
