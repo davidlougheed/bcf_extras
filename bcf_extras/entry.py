@@ -25,6 +25,7 @@ from .add_header_lines import add_header_lines
 from .copy_compress_index import copy_compress_index
 from .parallel_mergestr import parallel_mergestr
 from .filter_gff3 import filter_gff3
+from .merge_fastq_gz import merge_fastq_gz
 
 __all__ = [
     "main",
@@ -36,6 +37,7 @@ ACTION_ARG_JOIN = "arg-join"
 ACTION_COPY_COMPRESS_INDEX = "copy-compress-index"
 ACTION_PARALLEL_MERGESTR = "parallel-mergeSTR"
 ACTION_FILTER_GFF3 = "filter-gff3"
+ACTION_MERGE_FASTQ_GZ = "merge-fastq-gz"
 
 
 def _add_cci_parser(subparsers):
@@ -114,6 +116,14 @@ def _add_fg3_parser(subparsers):
     fg3_parser.add_argument("file", type=str, help="GFF3 file path to process.")
 
 
+def _add_mfg_parser(subparsers):
+    mfg_parser = subparsers.add_parser(
+        ACTION_MERGE_FASTQ_GZ,
+        help="Merges multiple FASTQs (compressed or uncompressed) files into a single .fastq (or .fastq.gz) file.")
+    mfg_parser.add_argument("--out", type=str, required=True, help="Output FASTQ path for final merge result.")
+    mfg_parser.add_argument("files", nargs="+", type=str, help="The FASTQs to merge.")
+
+
 def main(args: Optional[List[str]] = None):
     parser = argparse.ArgumentParser(
         description="A set of variant file helper utilities built on top of bcftools and htslib.")
@@ -128,6 +138,7 @@ def main(args: Optional[List[str]] = None):
     _add_aj_parser(subparsers)
     _add_pms_parser(subparsers)
     _add_fg3_parser(subparsers)
+    _add_mfg_parser(subparsers)
 
     p_args = parser.parse_args(args or sys.argv[1:])
 
@@ -157,6 +168,11 @@ def main(args: Optional[List[str]] = None):
             getattr(p_args, "strand", None),
             getattr(p_args, "phase", None),
             no_body_comments=p_args.no_body_comments,
+        )
+    elif p_args.action == ACTION_MERGE_FASTQ_GZ:
+        merge_fastq_gz(
+            p_args.files,
+            p_args.out
         )
 
 
