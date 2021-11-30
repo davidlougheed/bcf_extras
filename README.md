@@ -115,6 +115,9 @@ in a new file:
 bcf-extras filter-gff3 --type '^(gene|exon)$' example.gff3 > example-genes-exons.gff3
 ```
 
+To create a TABIX-indexable, compressible GFF3 file, you can use the 
+`--no-body-comments` flag to remove in-file comments that could interfere.
+
 For help, run the sub-command with no arguments:
 
 ```bash
