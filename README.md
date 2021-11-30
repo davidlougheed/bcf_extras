@@ -98,6 +98,29 @@ mergeSTR --vcfs $(bcf-extras arg-join *.vcf) --out my_merge
 
 The default separator (specified via `--sep`) is `,`.
 
+### `filter-gff3`
+
+This command can filter a GFF3 (or similarly formatted) file and filter it
+by various columns using regular expressions.
+
+It prints the filtered lines to `stdout`, which can then be redirected to a 
+file or piped to another process.
+
+Currently, you can filter by the `seqid`, `source`, `type`, `strand`, and 
+`phrase` columns using Python-formatted regular expressions, e.g. the 
+following, which filters `type` to be either `gene` or `exon` and stores that
+in a new file:
+
+```bash
+bcf-extras filter-gff3 --type '^(gene|exon)$' example.gff3 > example-genes-exons.gff3
+```
+
+For help, run the sub-command with no arguments:
+
+```bash
+bcf-extras filter-gff3
+```
+
 
 ## What's Included (STR)
 
