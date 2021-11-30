@@ -2,6 +2,6 @@
 ##FILTER=<ID=PASS,Description="All filters passed">
 ##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the variant">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	2820A_2-21203.sorted
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	sample1
 chr1	42093	.	A	T,C	.	PASS	END=149390841	GT	1/2
 chr1	31201	.	C	A,G	.	PASS	END=149390841	GT	1/1

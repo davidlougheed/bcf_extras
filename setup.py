@@ -7,9 +7,12 @@ with open("README.md", "r") as fh:
 
 setup(
     name="bcf_extras",
-    version="0.2.0-develop",
+    version="0.2.0",
 
     python_requires="~=3.7",
+    extras_require={
+        "str": ["trtools"],
+    },
 
     description="A set of variant file helper utilities built on top of bcftools and htslib.",
     long_description=long_description,
